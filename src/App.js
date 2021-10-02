@@ -1,36 +1,67 @@
+import PropTypes from 'prop-types';
 
-function Food( { name, picture }){
+function Food({ name, picture, alt, rating }) {
   return (
   <div>
-  <h2>I Like {name}</h2>;
-  <img src={picture} />
-  </div>
+    <h2>I like {name}</h2>
+    <h4>{rating}/5.0</h4>
+    <img src={picture} alt={alt} />
+    </div>
   );
 }
 
 const foodILike = [
   {
+    id: 1,
     name: 'Kimchi',
-    image: 'https://ncc-phinf.pstatic.net/ncc02/2010/8/18/50/01.jpg?type=f540_313',
+    image: 'images/Kimchi.jpg',
+    alt: '김치',
+    rating: 5.0
   },
   {
+    id: 2,
     name: 'Samgyeopsal',
-    image: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTA4MzBfMjc1%2FMDAxNjMwMjg1NTU5NTkz.92zHX1YS7C049r_vO3LcqghoGlr-orGQO80mjtkub0kg.TQpciXYKko_HrZsnOrOxUmwJqziQuSA8En2KPGIL4tEg.JPEG.ravvvit%2FIMG_9268.jpg&type=sc960_832',
+    image: 'images/Samgyeopsal.jpg',
+    alt: '삼겹살',
+    rating: 4.9
   },
   {
+    id: 3,
     name: 'Bibimbap',
-    image: 'https://ncc-phinf.pstatic.net/ncc02/2010/10/1/289/img01.jpg?type=f490_296',
+    image: 'images/Bibimbap.jpg',
+    alt: '비빔밥',
+    rating: 4.8
+  },
+  {
+    id: 4,
+    name: 'Tteokbokki',
+    image: 'images/Tteokbokki.jpg',
+    alt: '떡볶이',
+    rating: 4.7
   }
 ];
+
 
 function App() {
   return (
     <div>
       {foodILike.map(dish => (
-      <Food name={dish.name} picture={dish.image} />
+        <Food
+        key={dish.id}
+        name={dish.name}
+        picture={dish.image}
+        alt={dish.alt}
+        rating={dish.rating}
+        />
       ))}
     </div>
-  )
+  );
 }
 
-export default App
+Food.propTypes = {
+  name: PropTypes.string.isRequired,
+  picture: PropTypes.string.isRequired,
+  rating: PropTypes.number,
+};
+
+export default App;
