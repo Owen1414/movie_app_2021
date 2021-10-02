@@ -1,67 +1,42 @@
-import PropTypes from 'prop-types';
+import {Component} from 'react';
 
-function Food({ name, picture, alt, rating }) {
-  return (
-  <div>
-    <h2>I like {name}</h2>
-    <h4>{rating}/5.0</h4>
-    <img src={picture} alt={alt} />
-    </div>
-  );
+class App extends Component {
+    constructor(props){
+        super(props);
+        console.log('constructor');
+    }
+
+    state = {
+        count:0,
+    }
+
+    add = () => {
+        this.setState(current => ({ count : this.state.count + 1 }));
+    }
+
+    minus = () => {
+        this.setState(current => ({ count : this.state.count - 1 }));
+    }
+
+    componentDidMount(){
+        console.log('component rendered');
+    }
+
+    componentDidUpdate(){
+        console.log('I just updated');
+    }
+
+    render(){
+        console.log("I'm rendering");
+        return (
+            <div>
+            <h1> The number is : {this.state.count} </h1>
+            <button onClick={this.add}>Add</button>
+            <button onClick={this.minus}>Minus</button>
+            </div>
+        );
+    }
 }
 
-const foodILike = [
-  {
-    id: 1,
-    name: 'Kimchi',
-    image: 'images/Kimchi.jpg',
-    alt: '김치',
-    rating: 5.0
-  },
-  {
-    id: 2,
-    name: 'Samgyeopsal',
-    image: 'images/Samgyeopsal.jpg',
-    alt: '삼겹살',
-    rating: 4.9
-  },
-  {
-    id: 3,
-    name: 'Bibimbap',
-    image: 'images/Bibimbap.jpg',
-    alt: '비빔밥',
-    rating: 4.8
-  },
-  {
-    id: 4,
-    name: 'Tteokbokki',
-    image: 'images/Tteokbokki.jpg',
-    alt: '떡볶이',
-    rating: 4.7
-  }
-];
 
-
-function App() {
-  return (
-    <div>
-      {foodILike.map(dish => (
-        <Food
-        key={dish.id}
-        name={dish.name}
-        picture={dish.image}
-        alt={dish.alt}
-        rating={dish.rating}
-        />
-      ))}
-    </div>
-  );
-}
-
-Food.propTypes = {
-  name: PropTypes.string.isRequired,
-  picture: PropTypes.string.isRequired,
-  rating: PropTypes.number,
-};
-
-export default App;
+export default App
