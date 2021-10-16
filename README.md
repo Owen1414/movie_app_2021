@@ -1,6 +1,432 @@
-# 유지웅    201740126
-[ 10월 06일 ]
-학 습 내 용 (~ 6-2 액션 05까지)
+# 유지웅    201740126 </br></br>
+
+# [ 10월 13일 ]
+
+## 6-2 영화 데이터 화면에 그리기
+
+### 08. isLoading state true 에서 false 로 업데이트하기
+
++ 아직 앱을 실행하면 여전히 Loading만 출력
++ 여기서 “영화 데이터의 출력”를 출력하려면 isLoading state의 값을 true에서 false로 업데이트하면 됨
++ 앱이 실행되면 처음에는 Loading...이 화면에 나타나다가 조금 시간이 지나면 We are ready로 변하는 것을 확인할 수 있음
+
+```jsx
+        this.setState({movies, isLoading: false})
+```
+
+## 6-3 Movie 컴포넌트 만들기
+
+### 01. Movie 컴포넌트 만들기
+
++ src 폴더에 Movie.js 파일 생성하기
++ Movie 컴포넌트는 state 가 필요하지 않으므로 클래스형 컴포넌트가 아닌 함수형 컴포넌트로 작성
++ Movie에 넘어와야 하는 영화 데이터를 정의하고 관리하기 위해 prop-types 를 사용
+
+```jsx
+function Movie(){
+    return (
+        <h1></h1>
+    )
+}
+Movie.propTypes = {}
+```
+
+### 02. 영화 데이터 다시 살펴보기
+
++ yts-proxy.now.sh/list_movies.json 에 접속하여 사용할 영화 데이터 다시 확인.
++ 필요한 데이터 : id, title, rating 등등...
+
+### 03/04. Movie.propTypes 작성
+
+```jsx
+Movie.propTypes = {
+    id: PropTypes.number.isRequired,
+    year: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
+    }
+```
+
++ 우선 id 먼저 Movie.propTypes에 추가
++ id의 자료형은 Number
++ isRequired = 반드시 들어와야 한다
++ year, title, summary, poster를 각각 Movie.propTypes에 추가 (자료형 주의!)
++ poster props는 영화 포스터 이미지 주소를 저장하기 위한 것 => 영화 포스터 이미지 추가!
+
+### 05.
+
++ yts-proxy.now.sh/list_movies.json에 접속
++ medium_cover_image 키를 찾기 (키와 키값 살펴보기)
+
+### 06/07/08. 노마드 코더 영화 API 정렬 기능 사용해 보기
+
++ yts.lt/api#list_movies에 접속한 다음 Endpoint Parameters에 sort_by라는 Parameter가 있고, 우리는 이 Parameter를 사용
++ sort_by Parameter를 사용하기 위해 Examples를 참고
++ yts-proxy.now.sh/list_movies.json?sort_by=rating 접속
++ 평점을 기준으로 내림차순으로 영화 데이터를 정렬해 보여 주는 것을 확인할 수 있음
+
+### 09. axios.get() 수정하기
+
+```jsx
+getMovies = async () => {
+        const {
+            data: {
+                data: { movies },
+            },
+        } = await axios.get ('https://yts-proxy.now.sh/list_movies.json?sort_by=rating');
+        this.setState({movies, isLoading: false});
+    }
+```
++ axios.get()에 yts-proxy.now.sh/list_movies.json?sort_by=rating을 전달
+
+### 10. Movie 컴포넌트에서 props를 추가하고 출력해 보기
+
++ Movie 컴포넌트에서 id, title, year, summary, poster props를 받아 출력할 수 있도록 수정
++ App 컴포넌트에서 Movie컴포넌트를 그릴 때 title만 우선 출력하도록 만들어 보기
++ 음식 앱을 만들 때 컴포넌트를 map() 함수로 출력했던 것과 같이 코딩
+
+```jsx
+function Movie({ id, title, year, summary, poster }) {
+    return (
+        <h4>{title}</h4>
+    )
+}
+```
+
+### 11. App 컴포넌트에서 Movie컴포넌트 그리기
+
++ We are ready를 출력하고 있는 자리, 즉 로딩이 완료 되면 실행되는 자리에 movies.map()을 사용
++ map() 함수의 첫 번째 인자로 컴포넌트를 반환하는 함수를 전달하면 됨
+
+```jsx
+render() {
+        const { isLoading, movies } = this.state
+        return (<div>{isLoading ? 'Loading...' : movies.map()}</div>)
+}
+```
+
+### 12. map() 함수에 컴포넌트를 반환하는 함수 전달하기
+
++ 우선 console탭에 영화 데이터를 출력한 다음, 아무것도 반환하지 않는 함수를 전달해 보기
+
+```jsx
+render() {
+    const { isLoading, movies } = this.state
+        return (
+            <div>
+                {isLoading
+                ? 'Loading...'
+                : movies.map((movie) => {
+                    console.log(movie)
+                    return
+        })}
+        </div>
+    )
+}
+```
+
+### 13. Movie 컴포넌트를 반환하도록 movies.map() 수정하기
+
++ App.js에 Movie 컴포넌트를 import한 다음, movies.map()에 전달한 함수가 <Movie />를 반환하도록 하기
+
+```jsx
+import React from 'react'
+import axios from 'axios'
+import Movie from './Movie'
+.
+.
+.
+render() {
+.
+.
+.
+                : movies.map((movie) => {
+                    console.log(movie)
+                    return <Movie />
+        })}
+        </div>
+    )
+}
+```
+
+### 14. Movie컴포넌트에 props 전달하기
+
++ id, year, title, summary, poster를 isRequired로 설정했기 때문에 props를 모두 전달해야 함
++ 단, poster props의 경우 키 이름이 medium_cover_image이므로 movies.poster가 아니라 movies.medium_cover_image라고 작성
++ App을 실행해 보면 영화 제목이 나오는 것을 확인할 수 있음
+
+```jsx
+.
+.
+.
+                : movies.map((movie) => {
+                    console.log(movie)
+                    return (
+                        <Movie
+                        id = {movie.id}
+                        year = {movie.year}
+                        title = {movie.title}
+                        summary = {movie.summary}
+                        poster = {movie.medium_cover_image}
+                        />
+                        )
+        })}
+        </div>
+    )
+}
+```
+
+### 15. console탭에서 영화 데이터 확인해 보기
+
++ 오류 발생 (key props 경고 메시지)
+
+### 16. key props 추가하기
+
++ key props문제를 해결하기 위해 코드 수정
++ key props는 유일해야 함으로 API에서 넘겨주는 id값을 사용
++ console.log()는 사용하지 않음으로 삭제
+
+```jsx
+.
+.
+.
+                : movies.map((movie) => {
+                    return (
+                        <Movie
+                        key = {movie.id}
+                        id = {movie.id}
+                        year = {movie.year}
+                        title = {movie.title}
+                        summary = {movie.summary}
+                        poster = {movie.medium_cover_image}
+                        />
+                        )
+        })}
+        </div>
+    )
+}
+```
+
+## 6-4 영화 앱 스타일링하기 - 기초
+
+### 01. App 컴포넌트 HTML 추가
+
++ App컴포넌트가 반환할 JSX 바깥쪽을 <section class=“container”>로 감싸기
++ Loading…은 <div class=“loader”><span class=“loader”>로 감싸기
++ movies.map()은 <div class=“movies”>로 감싸기
+
+```jsx
+.
+.
+.
+render() {
+        const { isLoading, movies } = this.state
+        return (
+            <section class="container">
+            { isLoading ? (
+                <div class="loader">
+                    <span class="loader__text">Loading...</span>
+                </div>
+            ) : (
+                <div class="movies">
+                {movies.map((movie) => (
+                    <Movie
+                        key = {movie.id}
+                        id = {movie.id}
+                        year = {movie.year}
+                        title = {movie.title}
+                        summary = {movie.summary}
+                        poster = {movie.medium_cover_image}
+                    />
+                ))}
+                </div>
+            )}
+            </section>
+        )
+    }
+```
+
+### 02/03. Movie 컴포넌트에 HTML추가하기 + 영화 포스터 이미지 추가하기
+
++ Movie 컴포넌트가 반환할 JSX를 <div class=“movie”>로 감싼다.
++ 그 안에서 title, year, summary를 목적에 맞는 tag로 감싼다.
++ 전체 tag를 감싸는 div tag(class=“movie”)를 추가
++ img tag를 그 아래 추가해서 src속성에는 poster props를, alt속성에는 title props를 전달함
+
+```jsx
+function Movie({id, title, year, summary, poster}) {
+    return (
+            <div class="movie">
+            <img src={poster} alt={title} title={title} />
+            <div class="movie__data">
+                <h3 class="movie__title">{title}</h3>
+                <h5 class="movie__year">{year}</h5>
+                <p class="movie__summary">{summary}</p>
+            </div>
+        </div>
+    )
+}
+```
+
+### 04. Movie 컴포넌트 정리하기
+
++ Movie 컴포넌트에는 id props가 필요 없으니 제거
+
+```jsx
+function Movie({title, year, summary, poster}) {
+    return (
+        <div class="movie">
+        <img src={poster} alt={title} title={title} />
+        <div class="movie__data">
+            <h3 class="movie__title">{title}</h3>
+            <h5 class="movie__year">{year}</h5>
+            <p class="movie__summary">{summary}</p>
+        </div>
+        </div>
+    )
+}
+
+Movie.propTypes = {
+    year: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
+}
+```
+
+### 05. style속성으로 title 스타일링하기
+
++ h3 tag에 style 속성을 추가
+
+### 06/07. CSS 파일 생성 + App, Movie 컴포넌트에 CSS 파일 import
+
++ src폴더에 App.css, Movie.css를 생성한다.
++ App, Movie 컴포넌트에 App.css , Movie.css를 각각 import
++ Movie 컴포넌트에 적용한 h3 tag에 style 속성 삭제
+
+```jsx
+import React from 'react'
+import axios from 'axios'
+import Movie from './Movie'
+import './App.css'
+.
+.
+.
+```
+</br>
+
+```jsx
+import PropTypes from 'prop-types'
+import './Movie.css'
+.
+.
+.
+```
+
+### 08. App.css 파일 작성하기
+
+
+
+# 7장 - 영화 앱 다듬기
+
+# 7-1 영화 앱 전체 모습 수정하기
+
+### 01. App.css 내용 모두 삭제
+
++ App.css 내용 지우기
+
+### 02. 노마드 코더 영화 API에서 장르 키 살펴보기
+
++ 아직 추가하지 않은 영화 데이터 -> 장르
++ 장르 키 확인 -> runtime 키 아래 genres 키 존재 -> 영화 앱에 추가
+
+### 03. Movie 컴포넌트에 genres props 넘겨주기
+
++ runtime 아래 있는 genres를 추가
+
+```jsx
+import PropTypes from 'prop-types'
+import './Movie.css'
+
+function Movie({title, year, summary, poster, genres}) {
+    return (
+.
+.
+.
+Movie.propTypes = {
+    year: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
+    genres : PropTypes.arrayOf(PropTypes.string).isRequired,
+}
+```
+</br></br>
+
++ 수정 후 실행하면 경고 메시지 2개 발생!
++ (1) JSX에 사용한 속성 중 class 속성이 className으로 사용되어야 한다는 뜻 -> class 속성은 className으로 변경
++ (2) genres props가 필수인데 Movie 컴포넌트에 undefined로 넘어왔다는 뜻 -> genres가 잘 넘어오도록 App.js 수정
+
+### 04. Movie 컴포넌트 수정하기
+
++ genres props가 Movie 컴포넌트에 undefined로 넘어 왔다는 부분부터 수정
++ 이는 App컴포넌트에서 해당 props를 Movie컴포넌트로 전달하기만 하면 됨
++ 메시지가 사라졌는지 console을 확인
+
+```jsx
+...
+
+        summary = {movie.summary}
+        poster = {movie.medium_cover_image}
+        genres = {movie.genres}
+
+...
+```
+
+### 05.  class 속성 이름 className으로 바꿔 주기
+
++ HTML의 class와 자바스크립트의 class라는 이름이 겹치면 리액트가 혼란스러울 수 있기 때문
+
+```jsx
+...
+
+   render() {
+        const { isLoading, movies } = this.state
+        return (
+            <section className="container">
+            { isLoading ? (
+                <div className="loader">
+                    <span className="loader__text">Loading...</span>
+                </div>
+            ) : (
+                <div className="movies">
+
+...
+```
+
+</br></br>
+
+```jsx
+...
+
+function Movie({title, year, summary, poster, genres}) {
+    return (
+        <div className="movie">
+            <img src={poster} alt={title} title={title} />
+            <div className="movie__data">
+                <h3 className="movie__title">{title}</h3>
+                <h5 className="movie__year">{year}</h5>
+                <p className="movie__summary">{summary}</p>
+
+...
+```
+
+
+
+
+
+# [ 10월 06일 ]
 
 5-4 영화 앱 만들기 워밍업
 
@@ -33,9 +459,6 @@ setTimeout()함수의 첫 번째 인자는 실행할 함수,
 로딩한 데이터는 state에 저장
 여러가지 데이터가 있음으로 배열로 저장
 영화 데이터의 출력은 Render()함수의 'We are ready'부분에 출력하게 됨
-
-
-
 
 6장
 
@@ -136,6 +559,17 @@ movies.data.data.movies 와 같이 수정한 후 콘솔에서 확인해 보기
 05 - 객체에 있는 movies 키에 조금 더 똑똑하게 접근하기
 movies.data.data.movies 와 같은 방법으로 객체에 접근하는 방법?
 -> ES6를 사용한다면 구조 분해 할당이란 방법을 사용해 보자.
+
+06 - movies state에 영화 데이터 저장하기
+
+this.setState({ movies: movies })와 같이 작성해서 movies state 에 영화 데이터를 저장할 수 있음
+console.log()는 사용하지 않을거니까 제거
+
+07
+ES6 에서는 객체의 키와 대입할 변수의 이름이 같다면 코드를 축약할 수 있음
+{movies:movies}는 키와 대입할 변수의 이름이 같으니까 {movies}로 축약할 수 있음
+this.setState({ movies: movies })를 this.setState({ movies })로 수정
+
 
 
 [ 09월 29일 ]
