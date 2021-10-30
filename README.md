@@ -1,4 +1,119 @@
-# 유지웅    201740126 </br>
+# 유지웅    201740126 <br>
+
+# [ 11월 03일 ]
+
+## 8-3 내비게이션 만들어 보기<br><br>
+
+### 01. 
+
+## 8-4 영화 상세 정보 기능 만들어 보기<br><br>
+
+
+### 01. route props 살펴보기<br><br>
+
++ console.log()를 통해 About 으로 어떤 props가 넘어오는지 살펴보기
+
+```jsx
+import './About.css'
+
+function About(props)
+{
+    console.log(props)
+    return (
+    <div className="about__container">
+    <span>
+        "Freedom is the freedom to say that two plus two make four. If that is granted, all else follows."
+    </span>
+    <span>- George Orwell, 1984</span>
+    </div>
+    )
+}
+
+export default About
+```
+<br>
+
+### 02. route props에 데이터 담아 보내기<br><br>
+
+
+### 03. route props 다시 살펴보기<br><br>
+
++ /about으로 이동한 다음 [console] 탭에서 [location]을 펼처보기
++ state 키에 우리가 보내준 데이터를 확인할 수 있음<br><br>
+
+### 04. Navigation 컴포넌트 정리하기
+
+
++ 03까지 작성한 코드는 사용하지 않을 것이므로 원래대로 돌려 놓기
+
+```jsx
+import { Link } from 'react-router-dom'
+import './Navigation.css'
+
+function Navigation() {
+    return(
+        <div className="nav">
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+        </div>
+    )
+}
+export default Navigation
+```
+<br>
+
+### 05. Movie 컴포넌트에 Link 컴포넌트 추가하기<br><br>
+
+
+### 06. Detail 컴포넌트 만들기<br><br>
+
+
++ Detail 컴포넌트를 routes 폴더에 추가
++ Detail 컴포넌트에서 Movie 컴포넌트의 Link 컴포넌트가 보내준 영화 데이터 (state: {year, title, summary, poster, genres})를 확인해볼수 있도록 console.log()도 작성
+<br>
+
+```jsx
+function Detail(props){
+    console.log(props)
+    return <span>Hello!</span>
+}
+
+export default Detail
+```
+<br>
+
+### 07. Route 컴포넌트 추가하기<br><br>
+
+
+### 08. 영화 카드를 눌러 /movie-detail 로 이동한 다음 영화 데이터 확인하기<br><br>
+
+
+### 09. /movie-detail 로 바로 이동하기<br><br>
+
+
+
+
+
+
+## 8-5 리다이렉트 기능 만들어 보기<br><br>
+
+### 01. history 키 살펴보기<br><br>
+
+### 02. Detail 컴포넌트 클래스형 컴포넌트로 변경하기<br><br>
+
+### 03. push()함수 사용하기<br><br>
+
+### 04. 리다이렉트 기능 확인해 보기<br><br>
+
+### 05. 영화 제목 출력하기<br><br>
+
+### 06. /movie-detail 로 바로 이동하기<br><br>
+
+### 07. location.state 확인하기<br><br>
+
+
+
+<br><br>
 
 # [ 10월 27일 ]
 
@@ -22,14 +137,14 @@
 ...
 ```
 
-</br>
+<br>
 
 ```
 콘 솔
 Warning : Each child in a list should have a unique "key" prop.
 ```
 
-</br>
+<br>
 
 ### 07. li tag에 key props 추가하기
 
@@ -44,7 +159,7 @@ genres.map((genre, index) => {...})
 + 설명 : genre에는 genres의 배열 원소가 index에는 1,2,3...번째임을 알리는 숫자가 전달
 ```
 
-</br>
+<br>
 
 ```jsx
 ...
@@ -59,7 +174,7 @@ genres.map((genre, index) => {...})
 ...
 ```
 
-</br>
+<br>
 
 ## 7-2 영화 앱 멋지게 스타일링하기
 
@@ -82,7 +197,7 @@ genres.map((genre, index) => {...})
   }
 ```
 
-</br>
+<br>
 
 ### 02. Movie.css 수정하기
 
@@ -144,7 +259,7 @@ genres.map((genre, index) => {...})
   }
 ```
 
-</br>
+<br>
 
 ### 03. 시놉시스 180자로 제한하기
 
@@ -158,7 +273,7 @@ genres.map((genre, index) => {...})
 + (0,10) => (시작, 끝)
 ```
 
-</br>
+<br>
 
 ```jsx
 ...
@@ -168,7 +283,7 @@ genres.map((genre, index) => {...})
 ...
 ```
 
-</br>
+<br>
 
 ### 04/05 영화 앱 제목 살펴보기 + 영화 앱 제목 바꾸기
 
@@ -176,9 +291,9 @@ genres.map((genre, index) => {...})
 + create-react-app에서 지정한 기본값인 React App으로 되어있음
 + public폴더의 index.html에서 title을 수정 (title은 head 엘리먼트안에 있음, Movie App으로 수정)
 
-</br></br>
+<br><br>
 
-# 8장 - 영화 앱에 여러 기능 추가하기 <u>라우터 사용 중요!</u>
+# 8장 - 영화 앱에 여러 기능 추가하기 (라우터 사용 중요!)
 
 ## 8-1 react-router-dom 설치하고 프로젝트 폴더 정리하기
 
@@ -186,31 +301,31 @@ genres.map((genre, index) => {...})
 + 메뉴를 클릭하면 화면이 이동해야 하는데, 이때 필요한 것이 **라우터**
 + 라우터는 **react-router-dom** 패키지를 이용
 
-</br>
+<br>
 
 ### 01. react-router-dom 설치하기
 
 > **npm install react-router-dom**
 
-</br>
+<br>
 
 ### 02. components 폴더에 Movie 컴포넌트 옮기기
 
 + src/components 폴더 만들고 Movie컴포넌트 이동
 
-</br>
+<br>
 
 ### 03. routes 폴더에 라우터가 보여줄 화면 만들기
 
 + src/routes 폴더 만들고 Home.js와 About.js 파일 생성
 
-</br>
+<br>
 
 ### 04. Home.js 수정하기
 
 + App.js내용을 Home.js로 복사하고 컴포넌트 이름을 Home으로 수정
 + Home.css를 생성하고 Home.js에 import
-</br>
+<br>
 
 ```jsx
 import React from 'react'
@@ -226,12 +341,12 @@ class Home extends React.Component {
 export default Home
 ```
 
-</br>
+<br>
 
 ### 05/06. Home.css 만들기 / App.js 수정하기
 
 + Home.css의 내용은 교재 소스 그대로 사용한다.
-</br>
+<br>
 
 ```css
 .container {
@@ -264,7 +379,7 @@ export default Home
     }
   }
 ```
-</br>
+<br>
 
 ```jsx
 import Home from './routes/Home'
@@ -276,14 +391,14 @@ function App(){
 
 export default App
 ```
-</br>
+<br>
 
 ## 8-2 라우터 만들어 보기
 
 + 라우터는 사용자가 입력한 URL을 통해 특정 컴포넌트를 불러준다. 
 + React-router-dom은 여러 종류의 라우터를 제공하는데, 여기서는 **HashRouter**와 **Route**컴포넌트를 사용
 + App.js에 HashRouter와 Route컴포넌트 import하고 적용하기
-</br>
+<br>
 
 ### 01. HashRouter와 Router컴포넌트
 
@@ -292,7 +407,7 @@ export default App
 + 그리고 Home을 import 했던 코드는 잠시 지우기
 + Route에는 2가지 props를 전달할 수 있음
 + 하나는 URL을 위한 path props고, 또 하나는 URL에 맞는 컴포넌트를 불러 주기 위한 component props
-</br>
+<br>
 
 ```jsx
 import './App.css'
@@ -308,13 +423,13 @@ function App() {
 
 export default App
 ```
-</br>
+<br>
 
 ### 02. Route 컴포넌트에 path, component props 추가하기
 
 + About 컴포넌트를 import
 + Path, component props에 URL과 About 컴포넌트를 전달
-</br>
+<br>
 
 ```jsx
 import './App.css'
@@ -331,12 +446,12 @@ function App() {
 
 export default App
 ```
-</br>
+<br>
 
 ### 03. About.js 수정하기
 
 + About.js 내용 간단히 작성
-</br>
+<br>
 
 ```jsx
 function About() {
@@ -349,20 +464,20 @@ function About() {
 
 export default About
 ```
-</br>
+<br>
 
 ### 04. 라우터 테스트해 보기
 
 + localhost:3000/#에 path props로 전달했던 값 /about을 붙여 다시 접속
 + URL은 localhost:3000/#/about이고, 03에서 작성했던 내용이 출력
 + 이것은 Route 컴포넌트에 전달한 path props를 보고 component props에 지정한 About 컴포넌트를 그려 준 것
-</br>
+<br>
 
 ### 05. Home 컴포넌트를 위한 Route컴포넌트 추가하기
 
 + App 컴포넌트에 Home 컴포넌트를 import하고, 또 다른 Route 컴포넌트를 추가
 + path props를 “/”으로 입력한 이유는 localhost:3000에 접속하면 기본으로 보여줄 컴포넌트를 Home 컴포넌트로 하기 위해서임
-</br>
+<br>
 
 ```jsx
 import './App.css'
@@ -381,7 +496,7 @@ function App() {
 
 export default App
 ```
-</br>
+<br>
 
 ### 06. 라우터 테스트하고 문제 찾아보기
 
@@ -389,12 +504,12 @@ export default App
 + 이번에는 /about에도 접속해 보기
 + 당연히 About 컴포넌트만 출력되야 함에도, Movie 컴포넌트가 함께 출력됨
 + 이 문제를 해결하기
-</br>
+<br>
 
 ### 07. 라우터 자세히 살펴보기
 
 + App 컴포넌트에 라우터를 다음과 같이 구성
-</br>
+<br>
 
 ```jsx
 ...
@@ -416,15 +531,15 @@ function App() {
 
 export default App
 ```
-</br>
+<br>
 
 ### 08. 라우터 다시 테스트해 보기
 
 + /home에 접속하면 문제가 없어 보이지만, /home/introduction에 접속하면 Home이 함께 나오는 문제는 여전함
-+ 라우터는 사용자가 /home/introduction에 접속하면 /, /home, /home/introduction 순서로 path props가 있는지를 찾음</br>
++ 라우터는 사용자가 /home/introduction에 접속하면 /, /home, /home/introduction 순서로 path props가 있는지를 찾음<br>
   그런데 이들 모두가 path props를 갖고 있기 때문에 introduction에 접속하면 이 모든 것이 보이는 것임
 + 이와 같은 이유로 /about에 접속하면 /, /about 순서로 path props를 찾기 때문에 Home과 About 컴포넌트 모두 출력되는 것이었음
-</br>
+<br>
 
 ### 09. App 다시 원래대로 돌리기
 
@@ -432,7 +547,7 @@ export default App
 + 08에서 확인한 문제는 어떻게 하면 고칠 수 있을까?
     - Route 컴포넌트에 exact props를 추가하면 해결할 수 있음
     - exact props는 Route 컴포넌트가 path props와 정확하게 일치하는 URL에만 반응하도록 함
-</br>
+<br>
 
 ```jsx
 ...
@@ -447,12 +562,12 @@ function App() {
 
 export default App
 ```
-</br>
+<br>
 
 ### 10. Route 컴포넌트에 exact props 추가해보기
 
 + path props가 "/"인 Route 컴포넌트에 exact={true}를 추가
-</br>
+<br>
 
 ```jsx
 ...
@@ -467,13 +582,13 @@ function App() {
 
 export default App
 ```
-</br>
+<br>
 
 ### 11. About.css 작성하기
 
 + route 폴더에 About.css파일을 생성하고 css 코드를 작성
 + About.js에 About.css를 import하고, 적용할 수 있도록 내용도 수정
-</br>
+<br>
 
 ```jsx
 import './About.css'
@@ -492,7 +607,7 @@ function About()
 
 export default About
 ```
-</br>
+<br><br>
 
 # [ 10월 13일 ]
 
@@ -817,7 +932,7 @@ import './Movie.css'
 .
 ```
 
-### 08. App.css 파일 작성하기 </br></br>
+### 08. App.css 파일 작성하기 <br><br>
 
 
 
@@ -856,7 +971,7 @@ Movie.propTypes = {
     genres : PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 ```
-</br>
+<br>
 
 + 수정 후 실행하면 경고 메시지 2개 발생!
 + (1) JSX에 사용한 속성 중 class 속성이 className으로 사용되어야 한다는 뜻 -> class 속성은 className으로 변경
@@ -899,7 +1014,7 @@ Movie.propTypes = {
 ...
 ```
 
-</br>
+<br>
 
 ```jsx
 ...
