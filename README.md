@@ -1,4 +1,497 @@
-# 유지웅    201740126 </br></br>
+# 유지웅    201740126 </br>
+
+# [ 10월 27일 ]
+
+### 06. 영화 장르 출력하기
+
++ Movie컴포넌트에서 장르를 출력하도록 코드를 수정
++ genres props가 배열이므로 map()함수를 사용
++ genres props를 ul, li 태그로 감싸서 출력
++ console을 확인하면 kye props가 없다는 메시지가 나옴
+
+```jsx
+...
+        <ul className="movie__genres">
+                    { genres.map((genre) => {
+                        return (
+                            <li className="movie__genre">{genre}</li>
+                        )
+                    })
+                    }
+        </ul>
+...
+```
+
+</br>
+
+```
+콘 솔
+Warning : Each child in a list should have a unique "key" prop.
+```
+
+</br>
+
+### 07. li tag에 key props 추가하기
+
++ 그런데 genre에는 key값으로 사용하기에 적당한 id값 같은 것이 없음
++ 이럴 경우 새롭게 만들에 내야 하는데, map()함수에는 2번째 매개변수를 지정할 경우 배열의 index 값을 반환해 주는 기능이 있음
++ 이것을 이용해서 배열의 인덱스를 key props로 활용하는 것
++ console을 확인해보기
+
+```
+genres.map((genre, index) => {...})
+
++ 설명 : genre에는 genres의 배열 원소가 index에는 1,2,3...번째임을 알리는 숫자가 전달
+```
+
+</br>
+
+```jsx
+...
+        <ul className="movie__genres">
+                    { genres.map((genre, index) => {
+                        return (
+                            <li key={index} className="movie__genre">{genre}</li>
+                        )
+                    })
+                    }
+                </ul>
+...
+```
+
+</br>
+
+## 7-2 영화 앱 멋지게 스타일링하기
+
+### 01. App.css 수정하기
+
++ App.css 파일에는 영화 앱 전체에 적용할 글꼴, 배경색 등을 적용
+
+```css
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+      'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #eff3f7;
+    height: 100%;
+  }
+```
+
+</br>
+
+### 02. Movie.css 수정하기
+
+```css
+.movies .movie {
+    background-color: white;
+    margin-bottom: 70px;
+    font-weight: 300;
+    padding: 20px;
+    border-radius: 5px;
+    color: #adaeb9;
+    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3),
+      0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+  }
+  
+  .movies .movie a {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) 2fr;
+    grid-gap: 20px;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .movie img {
+    position: relative;
+    top: -50px;
+    max-width: 150px;
+    width: 100%;
+    margin-right: 30px;
+    box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3),
+      0 -12px 36px -8px rgba(0, 0, 0, 0.025);
+  }
+  
+  .movie .movie__title,
+  .movie .movie__year {
+    margin: 0;
+    font-weight: 300;
+  }
+  
+  .movie .movie__title {
+    margin-bottom: 5px;
+    font-size: 24px;
+    color: #2c2c2c;
+  }
+  
+  .movie .movie__genres {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 5px 0px;
+  }
+  
+  .movie__genres li,
+  .movie .movie__year {
+    margin-right: 10px;
+    font-size: 14px;
+  }
+```
+
+</br>
+
+### 03. 시놉시스 180자로 제한하기
+
++ 자바스크립트의 slice함수를 이용하여 구현
+
+```
+"hereisstriing".slice(0,10) // "hereisstri"
+
+설명
++ 시작은 0부터 ("hereisstriing" => 여기에서는 h가 시작, 0)
++ (0,10) => (시작, 끝)
+```
+
+</br>
+
+```jsx
+...
+                </ul>
+                <p className="movie__summary">{summary.slice(0, 180)}...</p>
+            </div>
+...
+```
+
+</br>
+
+### 04/05 영화 앱 제목 살펴보기 + 영화 앱 제목 바꾸기
+
++ 크롬 브라우저 탭에서 확인
++ create-react-app에서 지정한 기본값인 React App으로 되어있음
++ public폴더의 index.html에서 title을 수정 (title은 head 엘리먼트안에 있음, Movie App으로 수정)
+
+</br></br>
+
+# 8장 - 영화 앱에 여러 기능 추가하기 (<u>라우터 사용 중요!</u>)
+
+## 8-1 react-router-dom 설치하고 프로젝트 폴더 정리하기
+
++ 간단한 메뉴를 추가
++ 메뉴를 클릭하면 화면이 이동해야 하는데, 이때 필요한 것이 **라우터**
++ 라우터는 **react-router-dom** 패키지를 이용
+
+</br>
+
+### 01. react-router-dom 설치하기
+
+> **npm install react-router-dom**
+
+</br>
+
+### 02. components 폴더에 Movie 컴포넌트 옮기기
+
++ src/components 폴더 만들고 Movie컴포넌트 이동
+
+</br>
+
+### 03. routes 폴더에 라우터가 보여줄 화면 만들기
+
++ src/routes 폴더 만들고 Home.js와 About.js 파일 생성
+
+</br>
+
+### 04. Home.js 수정하기
+
++ App.js내용을 Home.js로 복사하고 컴포넌트 이름을 Home으로 수정
++ Home.css를 생성하고 Home.js에 import
+</br>
+
+```jsx
+import React from 'react'
+import axios from 'axios'
+import Movie from '../components/Movie'
+import './Home.css'
+
+
+class Home extends React.Component {
+...
+}
+
+export default Home
+```
+
+</br>
+
+### 05/06. Home.css 만들기 / App.js 수정하기
+
++ Home.css의 내용은 교재 소스 그대로 사용한다.
+</br>
+
+```css
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .loader {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 300;
+  }
+  .movies {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(400px, 1fr));
+    grid-gap: 100px;
+    padding: 50px;
+    width: 80%;
+    padding-top: 70px;
+  }
+  
+  @media screen and (max-width: 1090px) {
+    .movies {
+      grid-template-columns: 1fr;
+      width: 100%;
+    }
+  }
+```
+</br>
+
+```jsx
+import Home from './routes/Home'
+import './App.css'
+
+function App(){
+    return <Home />
+}
+
+export default App
+```
+</br>
+
+## 8-2 라우터 만들어 보기
+
++ 라우터는 사용자가 입력한 URL을 통해 특정 컴포넌트를 불러준다. 
++ React-router-dom은 여러 종류의 라우터를 제공하는데, 여기서는 **HashRouter**와 **Route**컴포넌트를 사용
++ App.js에 HashRouter와 Route컴포넌트 import하고 적용하기
+</br>
+
+### 01. HashRouter와 Router컴포넌트
+
++ HashRouter와 Router컴포넌트 import
++ HashRouter컴포넌트가 Route컴포넌트를 감싸 반환하도록 App.js를 수정
++ 그리고 Home을 import 했던 코드는 잠시 지우기
++ Route에는 2가지 props를 전달할 수 있음
++ 하나는 URL을 위한 path props고, 또 하나는 URL에 맞는 컴포넌트를 불러 주기 위한 component props
+</br>
+
+```jsx
+import './App.css'
+import { HashRouter, Route } from 'react-router-dom'
+
+function App() {
+    return (
+        <HashRouter>
+            <Route />
+        </HashRouter>
+    )
+}
+
+export default App
+```
+</br>
+
+### 02. Route 컴포넌트에 path, component props 추가하기
+
++ About 컴포넌트를 import
++ Path, component props에 URL과 About 컴포넌트를 전달
+</br>
+
+```jsx
+import './App.css'
+import { HashRouter, Route } from 'react-router-dom'
+import About from './routes/About'
+
+function App() {
+    return (
+        <HashRouter>
+            <Route path="/about" component={About} />
+        </HashRouter>
+    )
+}
+
+export default App
+```
+</br>
+
+### 03. About.js 수정하기
+
++ About.js 내용 간단히 작성
+</br>
+
+```jsx
+function About() {
+    return (
+    <span>
+        About this page: I built it because I love movies.
+    </span>
+    )
+}
+
+export default About
+```
+</br>
+
+### 04. 라우터 테스트해 보기
+
++ localhost:3000/#에 path props로 전달했던 값 /about을 붙여 다시 접속
++ URL은 localhost:3000/#/about이고, 03에서 작성했던 내용이 출력
++ 이것은 Route 컴포넌트에 전달한 path props를 보고 component props에 지정한 About 컴포넌트를 그려 준 것
+</br>
+
+### 05. Home 컴포넌트를 위한 Route컴포넌트 추가하기
+
++ App 컴포넌트에 Home 컴포넌트를 import하고, 또 다른 Route 컴포넌트를 추가
++ path props를 “/”으로 입력한 이유는 localhost:3000에 접속하면 기본으로 보여줄 컴포넌트를 Home 컴포넌트로 하기 위해서임
+</br>
+
+```jsx
+import './App.css'
+import { HashRouter, Route } from 'react-router-dom'
+import About from './routes/About'
+import Home from './routes/Home'
+
+function App() {
+    return (
+        <HashRouter>
+            <Route path="/" component={Home} />
+            <Route path="/about" component={About} />
+        </HashRouter>
+    )
+}
+
+export default App
+```
+</br>
+
+### 06. 라우터 테스트하고 문제 찾아보기
+
++ localhost:3000에 접속하면 주소 뒤에 자동으로 /#/가 붙으면서 영화 앱 화면이 나타남
++ 이번에는 /about에도 접속해 보기
++ 당연히 About 컴포넌트만 출력되야 함에도, Movie 컴포넌트가 함께 출력됨
++ 이 문제를 해결하기
+</br>
+
+### 07. 라우터 자세히 살펴보기
+
++ App 컴포넌트에 라우터를 다음과 같이 구성
+</br>
+
+```jsx
+...
+function App() {
+    return (
+        <HashRouter>
+            <Route path="/home">
+            <h1>Home</h1>
+            </Route>
+            <Route path="/home/introduction">
+            <h1>Introduction</h1>
+            </Route>
+            <Route path="/about">
+            <h1>About</h1>
+            </Route>
+        </HashRouter>
+    )
+}
+
+export default App
+```
+</br>
+
+### 08. 라우터 다시 테스트해 보기
+
++ /home에 접속하면 문제가 없어 보이지만, /home/introduction에 접속하면 Home이 함께 나오는 문제는 여전함
++ 라우터는 사용자가 /home/introduction에 접속하면 /, /home, /home/introduction 순서로 path props가 있는지를 찾음</br>
+  그런데 이들 모두가 path props를 갖고 있기 때문에 introduction에 접속하면 이 모든 것이 보이는 것임
++ 이와 같은 이유로 /about에 접속하면 /, /about 순서로 path props를 찾기 때문에 Home과 About 컴포넌트 모두 출력되는 것이었음
+</br>
+
+### 09. App 다시 원래대로 돌리기
+
++ 이제 App.js를 액션08에서 테스트 했던 이전 상태로 되돌리기
++ 08에서 확인한 문제는 어떻게 하면 고칠 수 있을까?
+    - Route 컴포넌트에 exact props를 추가하면 해결할 수 있음
+    - exact props는 Route 컴포넌트가 path props와 정확하게 일치하는 URL에만 반응하도록 함
+</br>
+
+```jsx
+...
+function App() {
+    return (
+        <HashRouter>
+            <Route path="/" component={Home} />
+            <Route path="/about" component={About} />
+        </HashRouter>
+    )
+}
+
+export default App
+```
+</br>
+
+### 10. Route 컴포넌트에 exact props 추가해보기
+
++ path props가 "/"인 Route 컴포넌트에 exact={true}를 추가
+</br>
+
+```jsx
+...
+function App() {
+    return (
+        <HashRouter>
+            <Route path="/" exact={true} component={Home} />
+            <Route path="/about" component={About} />
+        </HashRouter>
+    )
+}
+
+export default App
+```
+</br>
+
+### 11. About.css 작성하기
+
++ route 폴더에 About.css파일을 생성하고 css 코드를 작성
++ About.js에 About.css를 import하고, 적용할 수 있도록 내용도 수정
+</br>
+
+```jsx
+import './About.css'
+
+function About()
+{
+    return (
+    <div className="about__container">
+    <span>
+        "Freedom is the freedom to say that two plus two make four. If that is granted, all else follows."
+    </span>
+    <span>- George Orwell, 1984</span>
+    </div>
+    )
+}
+
+export default About
+```
 
 # [ 10월 13일 ]
 
@@ -314,7 +807,6 @@ import './App.css'
 .
 .
 ```
-</br>
 
 ```jsx
 import PropTypes from 'prop-types'
@@ -324,7 +816,8 @@ import './Movie.css'
 .
 ```
 
-### 08. App.css 파일 작성하기
+### 08. App.css 파일 작성하기 </br></br>
+
 
 
 
@@ -362,7 +855,7 @@ Movie.propTypes = {
     genres : PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 ```
-</br></br>
+</br>
 
 + 수정 후 실행하면 경고 메시지 2개 발생!
 + (1) JSX에 사용한 속성 중 class 속성이 className으로 사용되어야 한다는 뜻 -> class 속성은 className으로 변경
@@ -405,7 +898,7 @@ Movie.propTypes = {
 ...
 ```
 
-</br></br>
+</br>
 
 ```jsx
 ...
