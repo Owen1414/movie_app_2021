@@ -178,7 +178,7 @@ genres.map((genre, index) => {...})
 
 </br></br>
 
-# 8장 - 영화 앱에 여러 기능 추가하기 (<u>라우터 사용 중요!</u>)
+# 8장 - 영화 앱에 여러 기능 추가하기 <u>라우터 사용 중요!</u>
 
 ## 8-1 react-router-dom 설치하고 프로젝트 폴더 정리하기
 
@@ -492,6 +492,7 @@ function About()
 
 export default About
 ```
+</br>
 
 # [ 10월 13일 ]
 
