@@ -1,21 +1,171 @@
-# 유지웅    201740126 <br>
+# 유지웅    201740126
 
 # [ 11월 03일 ]
 
 ## 8-3 내비게이션 만들어 보기
 
++ 라우터를 이용한 간단한 **내비게이션** 만들기
++ Home과 About이라는 2개의 버튼을 만들고,<br>
+각각의 버튼을 눌렸을 때 해당 화면이 보이도록 할 것<br><br>
+
 ### 01. Navigation 컴포넌트 만들기
+
++ 먼저 components 폴더에 Navigation.js 파일을 만들고,<br>
+2개의 a 태그를 반환하도록 JSX 작성
+
+```jsx
+function Navigation() {
+    return(
+        <div>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        </div>
+    )
+}
+export default Navigation
+```
+<br>
 
 ### 02. Navigation 컴포넌트 App 컴포넌트에 포함 시키기
 
++ App컴포넌트에 Navigation을 import시키고, < HashRoute >에서 불러오게 하기
++ 앱을 실행하면 Navigation이 출력되는 것을 확인할 수 있음
++ 동작은 잘 되는지 다음 액션에서 확인해 보기
+
+```jsx
+import './App.css'
+import { HashRouter, Route } from 'react-router-dom'
+import About from './routes/About'
+import Home from './routes/Home'
+import Navigation from './components/Navigation'
+
+function App() {
+    return (
+        <HashRouter>
+            <Navigation />
+            <Route path="/" exact={true} component={Home} />
+            <Route path="/about" component={About} />
+        </HashRouter>
+    )
+}
+
+export default App
+```
+<br>
+
 ### 03. Home 링크 눌러 보기
+
++ Home링크를 눌러보기
++ 링크를 클릭할 때마다 리액트가 죽고, 새 페이지가 열리는 문제가 발생함
++ 원인은 a 태그의 href속성이 페이지 전체를 다시 그리는 성질을 갖고 있기 때문
++ 이대로 라면 필요한 부분만 다시 그려주는 리액트를 써야할 이유가 없음
++ 이 문제를 해결하려면 react-router-dom의 **Link 컴포넌트**를 사용하면 됨
+<br><br>
+
+### 04. a 태그 Link 컴포넌트로 바꾸기
+
++ Navigation 컴포넌트에 Link 컴포넌트를 import하고 a 태그를 Link 컴포넌트로 바꾸기
++ href속성은 to로 수정
++ 앱을 실행하고 링크를 클릭해 보면<br>
+페이지 전체 고침 문제가 해결된 것을 확인할 수 있음
+
+```jsx
+import { Link } from 'react-router-dom'
+
+
+function Navigation() {
+    return(
+        <div>
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+        </div>
+    )
+}
+export default Navigation
+```
+<br>
+
+**Link, Router 컴포넌트는 반드시 HashRouter안에 포함되어야 함**
+<br><br>
+
+### 05. Navigation 컴포넌트 위치 다시 확인하기
+
++ Navigation 컴포넌트에서 Link 컴포넌트를 반환함으로<br>
+Navigation 컴포넌트가 혹시 실수로 HashRouter 컴포넌트 바깥에 위치시켰다면<br>
+HashRouter 컴포넌트 안으로 수정
+<br><br>
+
+### 06. Navigation 컴포넌트 스타일링하기
+
++ components 폴더에 Navigation.css 파일을 만들고, css코드를 작성
++ Navigation 컴포넌트에 css를 import하고 이를 적용시키기
+
+```css
+.nav {
+    z-index: 1;
+    position: fixed;
+    top: 50px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3),
+      0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+    border-radius: 5px;
+  }
+  
+  @media screen and (max-width: 1090px) {
+    .nav {
+      left: initial;
+      top: initial;
+      bottom: 0px;
+      width: 100%;
+    }
+  }
+  
+  .nav a {
+    text-decoration: none;
+    color: #0008fc;
+    text-transform: uppercase;
+    font-size: 12px;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .nav a:not(:last-child) {
+    margin-bottom: 20px;
+  }
+```
+
+```jsx
+import { Link } from 'react-router-dom'
+import './Navigation.css'
+
+function Navigation() {
+    return(
+        <div className="nav">
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+        </div>
+    )
+}
+export default Navigation
+```
+<br>
 
 ## 8-4 영화 상세 정보 기능 만들어 보기
 
++ route props를 이용해 영화 카드를 누르면 상세 정보를 보여주는 기능을 만들어 보기
++ route props는 라우팅 대상이 되는 컴포넌트에 넘겨주는 기본 props를 말함<br><br>
 
-### 01. route props 살펴보기<br><br>
+### 01. route props 살펴보기
 
-+ console.log()를 통해 About 으로 어떤 props가 넘어오는지 살펴보기
++ 먼저 consol.log()를 통해 About으로 어떤 props가 넘어오는지 확인
++ react-router-dom에서 Route 컴포넌트가 그려줄 컴포넌트에
+전달한 props를 확인할 수 있음
++ Route 컴포넌트가 그려줄 컴포넌트에는 항상 이 props가 전달되며,<br>
+이 props는 원하는 데이터를 담아 보낼 수 있음
 
 ```jsx
 import './About.css'
@@ -37,13 +187,32 @@ export default About
 ```
 <br>
 
-### 02. route props에 데이터 담아 보내기<br><br>
+### 02. route props에 데이터 담아 보내기
+
++ 데이터를 담아 보내려면 Navigation 컴포넌트에 있는<br>
+Link컴포넌트의 to props의 구조를 조금 바꿔야 함
++ pathname은 URL을 의미하며, state는 우리가 route props에 보내줄 데이터를 의미
 
 
-### 03. route props 다시 살펴보기<br><br>
+```jsx
+import { Link } from 'react-router-dom'
+import './Navigation.css'
 
-+ /about으로 이동한 다음 [console] 탭에서 [location]을 펼처보기
-+ state 키에 우리가 보내준 데이터를 확인할 수 있음<br><br>
+function Navigation() {
+    return(
+        <div className="nav">
+        <Link to="/">Home</Link>
+        <Link to={{ pathname: '/about', state: { fromNavigation: true }}}>About</Link>
+        </div>
+    )
+}
+export default Navigation
+```
+<br>
+
+### 03. route props 다시 살펴보기
++ /about 으로 이동한 후 console 에서 location 을 살펴보기
++ state 키에 우리가 보낸 데이터를 확인할 수 있음<br><br>
 
 ### 04. Navigation 컴포넌트 정리하기
 
@@ -65,58 +234,241 @@ export default Navigation
 ```
 <br>
 
-### 05. Movie 컴포넌트에 Link 컴포넌트 추가하기<br><br>
+### 05. Movie 컴포넌트에 Link 컴포넌트 추가하기
 
++ Movie컴포넌트를 클릭하면 영화 상세 정보 페이지로 이동해야 함으로<br>
+Movie컴포넌트에 Link컴포넌트를 추가
++ Movie컴포넌트에 Link컴포넌트를 import하고, Link컴포넌트에 to props를 작성
++ 이때 Link컴포넌트의 위치에 주의
++ 이제 영화 카드를 누르면 /movie-detail로 이동하게 됨
 
-### 06. Detail 컴포넌트 만들기<br><br>
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import './Movie.css'
+import { Link } from 'react-router-dom'
 
-
-+ Detail 컴포넌트를 routes 폴더에 추가
-+ Detail 컴포넌트에서 Movie 컴포넌트의 Link 컴포넌트가 보내준 영화 데이터 (state: {year, title, summary, poster, genres})를 확인해볼수 있도록 console.log()도 작성
+function Movie({title, year, summary, poster, genres}) {
+    return (
+        <div className="movie">
+            <Link
+            to={{
+                pathname: '/movie-detail',
+                state: { year, title, summary, poster, genres },
+            }}
+            >
+...
+                <p className="movie__summary">{summary.slice(0, 180)}...</p>
+            </div>
+            </Link>
+...
+```
 <br>
+
+### 06. Detail 컴포넌트 만들기
+
++ Detail 컴포넌트를 routes폴더에 추가
++ Detail컴포넌트에서 Movie컴포넌트의 Link 컴포넌트가 보내준<br>
+영화 데이터를 확인할 수 있도록 console.log()를 작성
++ 아직은 console.log(props)는 확인할 수 없음<br>
+07로 App.js 에서 Route 컴포넌트를 추가하면 확인할 수 있음
 
 ```jsx
 function Detail(props){
     console.log(props)
-    return <span>Hello!</span>
+    return <span>hello</span>
 }
 
 export default Detail
 ```
 <br>
 
-### 07. Route 컴포넌트 추가하기<br><br>
+### 07. Route 컴포넌트 추가하기
 
++ App.js에 Detail 컴포넌트를 import하고<br>
+Route 컴포넌트에서 Detail 컴포넌트를 그려 주도록 코드를 작성
 
-### 08. 영화 카드를 눌러 /movie-detail 로 이동한 다음 영화 데이터 확인하기<br><br>
+```jsx
+import './App.css'
+import { HashRouter, Route } from 'react-router-dom'
+import About from './routes/About'
+import Home from './routes/Home'
+import Navigation from './components/Navigation'
+import Detail from './routes/Detail'
 
+function App() {
+    return (
+        <HashRouter>
+            <Navigation />
+            <Route path="/" exact={true} component={Home} />
+            <Route path="/about" component={About} />
+            <Route path="/movie-detail" component={Detail} />
+        </HashRouter>
+    )
+}
 
-### 09. /movie-detail 로 바로 이동하기<br><br>
+export default App
+```
+<br>
 
+### 08. 영화 카드를 눌러 /movie-detail 로 이동한 다음 영화 데이터 확인하기
 
++ 영화 카드를 클릭해서 /movie-detail 로 이동하기
++ 화면에는 Detail 컴포넌트가 출력하는 hello라는 문장을 확인할 수 있음
++ console에는 location → state에 Movie컴포넌트에서<br>
+Link 컴포넌트를 통해 보내준 데이터가 들어있는지 확인해 보기<br><br>
 
+### 09. /movie-detail 로 바로 이동하기
 
++ URL에 /movie-detail을 입력해서 바로 이동해 보기
++ 그리고 console창을 확인
++ Detail 컴포넌트의 hello는 잘 출력하고 있지만 console 에는 영화데이터가 보이지 않음<br>
+Detail 컴포넌트로 영화 데이터가 넘어 오지 못한 것
++ 이런 경우에는 사용자를 강제로 Home으로 돌려 보내야 함
+<br><br>
 
 
 ## 8-5 리다이렉트 기능 만들어 보기
 
-### 01. history 키 살펴보기<br><br>
++ 리다이렉트 기능을 사용하기 위해서는 **route props**의 **history** 키를 활용해야 함
++ history키에는 push, go, goBack, goForward와 같은 키가 있으며,<br>
+그 키에는 URL을 변경해 주는 함수들이 있음
++ 이 함수들을 이용해서 리다이렉트 기능을 구현<br><br>
 
-### 02. Detail 컴포넌트 클래스형 컴포넌트로 변경하기<br><br>
+### 01. history 키 살펴보기
 
-### 03. push()함수 사용하기<br><br>
-
-### 04. 리다이렉트 기능 확인해 보기<br><br>
-
-### 05. 영화 제목 출력하기<br><br>
-
-### 06. /movie-detail 로 바로 이동하기<br><br>
-
-### 07. location.state 확인하기<br><br>
++ 주소창에 localhost:3000을 입력해서 이동한 다음 아무 영화나 눌러 이동
++ console에서 history에 출력된 값을 확인
++ 03에서는 componentDidMount() 생명주기 함수를 사용해<br>
+Detail 컴포넌트가 마운트될 때 push()함수를 실행하도록 함<br><br>
 
 
+### 02. Detail 컴포넌트 클래스형 컴포넌트로 변경하기
 
-<br><br>
++ Detail 컴포넌트를 함수형에서 클래스형으로 변경한 후<br>
+location, history키를 구조 분해 할당하기
+
+```jsx
+import React from "react"
+
+class Detail extends React.Component {
+    componentDidMount() {
+        const { location, history } = this.props
+    }
+
+    render () {
+            return <span>hello</span>
+    }
+}
+
+export default Detail
+```
+<br>
+
+### 03. push()함수 사용하기
+
++ location.state가 undefined인 경우 history.push(“/”)를 실행하도록 코드를 작성
+
+```jsx
+import React from "react"
+
+class Detail extends React.Component {
+    componentDidMount() {
+        const { location, history } = this.props
+        if (location.state === undefined) {
+            history.push('/')
+        }
+    }
+    render () {
+        return <span>hello</span>
+    }
+}
+
+export default Detail
+```
+<br>
+
+### 04. 리다이렉트 기능 확인해 보기
+
++ 주소창에 직접 주소를 입력해서 /movie-detail로 이동해 보기
++ 홈으로 돌아오면 기능이 정상적으로 동작하고 있는 것
++ 이제부터는 영화 카드를 눌러 영화 상세 정보 페이지로 이동하지 않으면<br>
+다시 첫 화면으로 돌아가게 됨<br><br>
+
+### 05. 영화 제목 출력하기
+
++ 이제부터 영화 상세 정보 페이지를 만들어 보기
++ 먼저 영화 제목을 출력해 보기
++ Movie 컴포넌트로부터 전달 받은 영화 데이터는 location.state에 들어 있기 때문에<br>
+location.state.title을 출력하도록 하면 됨
+
+```jsx
+import React from "react"
+
+class Detail extends React.Component {
+    componentDidMount() {
+        const { location, history } = this.props
+        if (location.state === undefined) {
+            history.push('/')
+        }
+    }
+    render () {
+        const { location } = this.props
+        return <span>{location.state.title}</span>
+    }
+}
+
+export default Detail
+```
+<br>
+
+### 06. /movie-detail 로 바로 이동하기
+
++ 그런데 05 작업 이후, /movie-detail로 이동하면 또 오류가 발생
++ componentDidMount() 생명주기 함수에 작성한 리다이렉트 기능이 동작하지 않기 때문
++ 그 이유는 Detail컴포넌트는 render() → componentDidMount()의 순서로<br>
+함수를 실행하기 때문
++ 즉, render()함수 내에서 location.state.title을 사용하려고 하는데<br>
+location.state가 이전과 마찬가지로 undefined 이기 때문인 것
++ render() 함수에도 componentDidMount() 생명주기 함수에 작성한<br>
+리다이렉트 코드를 추가해야 함
+
+
+### 07. location.state 확인하기
+
++ location.state가 없으면 render() 함수가 null을 반환하도록 수정
++ 이제 componentDidMount() 생명주기 함수가 실행되면서<br>
+리다리렉트 기능이 동작하게 된다.
+
+```jsx
+import React from "react"
+
+class Detail extends React.Component {
+    componentDidMount() {
+        const { location, history } = this.props
+        if (location.state === undefined) {
+            history.push('/')
+        }
+    }
+
+    render () {
+        const { location } = this.props
+        if (location.state) {
+            return <span>{location.state.title}</span>
+        } else {
+          return null
+        }
+    }
+}
+export default Detail
+```
+<br>
+
++ router 사용 후 주소에 hash(#)가 나타나는 현상 없애려면 어떻게 해야 하나?<br>
+ → **HashRouter** 대신 **BrowserRouter** 사용!
+
+
+<br><br><br>
 
 # [ 10월 27일 ]
 
