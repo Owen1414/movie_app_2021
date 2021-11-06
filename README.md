@@ -47,7 +47,6 @@ export default About
 
 ### 04. Navigation 컴포넌트 정리하기
 
-
 + 03까지 작성한 코드는 사용하지 않을 것이므로 원래대로 돌려 놓기
 
 ```jsx
