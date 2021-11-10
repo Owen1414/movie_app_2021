@@ -1,5 +1,11 @@
 # 유지웅    201740126
+
 # [ 11월 10일 ]
+
++ 계정 변경
+> git config --global user.name 변경을 희망하는 계정
+> git config --global user.email 변경을 희망하는 이메일
+
 # [ 11월 03일 ]
 
 ## 8-3 내비게이션 만들어 보기
