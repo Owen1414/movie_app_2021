@@ -224,16 +224,6 @@ ReactDOM.render(
 ```
 <br><br>
 
-
-# [ 11월 10일 ]
-
-+ **계정 변경 방법**
-
-> **git config --global user.name 변경을 희망하는 계정**<br>
-
-> **git config --global user.email 변경을 희망하는 이메일**
-<br><br><br>
-
 # [ 11월 03일 ]
 
 ## 8-3 내비게이션 만들어 보기
