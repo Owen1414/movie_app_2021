@@ -20,7 +20,7 @@
 + homepage 키와 키값을 browserslist키 아래에 추가하기
 + 깃허브 계정과 저장소 이름에 주의하여 입력
 
-```json
+```jsx
 .
 .
 .
@@ -45,7 +45,8 @@
 <br>
 
 + package.json 파일을 열어 **scripts 키캆**으로 명령어를 추가
-```json
+
+```jsx
 .
 .
 .
