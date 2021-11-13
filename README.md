@@ -224,6 +224,15 @@ ReactDOM.render(
 <br><br>
 
 
+# [ 11월 10일 ]
+
++ **계정 변경 방법**
+
+> **git config --global user.name 변경을 희망하는 계정**<br>
+
+> **git config --global user.email 변경을 희망하는 이메일**
+<br><br><br>
+
 # [ 11월 03일 ]
 
 ## 8-3 내비게이션 만들어 보기
@@ -315,7 +324,7 @@ export default Navigation
 ### 05. Navigation 컴포넌트 위치 다시 확인하기
 
 + Navigation 컴포넌트에서 Link 컴포넌트를 반환함으로<br>
-Navigation 컴포넌트가 혹시 실수로 HashRouter 컴포넌트 바깥에 위치시켰다면<br>
+혹시 실수로 HashRouter 컴포넌트 바깥에 위치시켰다면<br>
 HashRouter 컴포넌트 안으로 수정
 <br><br>
 
