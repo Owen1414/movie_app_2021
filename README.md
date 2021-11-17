@@ -1,13 +1,228 @@
 # 유지웅    201740126
+<br>
 
 # [ 11월 10일 ]
 
-+ **계정 변경 방법**
+ **계정 변경 방법**
 
 > **git config --global user.name 변경을 희망하는 계정**<br>
 
 > **git config --global user.email 변경을 희망하는 이메일**
-<br><br><br>
+
+<br><br>
+
+## 영화 앱 깃허브에 배포하기
+
+### 01/02. package.json 파일 수정
+
++ 가장 먼저 해야 할 일은 깃허브 주소를 영화 앱이 인식할 수 있도록<br>
+**package.json 파일**을 수정하는 것
++ homepage 키와 키값을 browserslist키 아래에 추가하기
++ 깃허브 계정과 저장소 이름에 주의하여 입력
+
+```jsx
+.
+.
+.
+
+"browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },          // 쉼표 꼭 넣기!
+  "homepage":"https://Owen1414.github.io/movie_app_2021"
+  // 계정 이름, 저장소 이름 확인!
+
+}
+```
+<br>
+
++ package.json 파일을 열어 **scripts 키캆**으로 명령어를 추가
+
+```jsx
+.
+.
+.
+
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",   // 쉼표 꼭 넣기!
+    "predeploy": "npm run build",     // 삽입
+    "deploy":"gh-pages -d build"      // 삽입
+  },
+
+.
+.
+.
+```
+<br>
+
+### 03. 최종 코드 깃허브에 업로드하기
+
+```
+git add .
+git commit -m "최종 완성 코드"
+git push origin master
+```
+<br>
+
+### 04. gh-pages 설치하기
+
++ 최종 완성 코드를 깃허브에 업로드함
++ 배포 서비스를 이용해서 다른 사람들이<br>
+영화 앱을 사용할 수 있도록 해야 함
++ **이 책에서는 깃허브에서 제공하는 GitHub Pages 서비스(무료)로<br>
+영화 앱을 배포**
++ 프로젝트 루트 폴더에서 명령어를 입력하여 **gh-pages** 설치하기
+
+```
+> npm install gh-pages
+```
+<br>
+
+### 05. 깃허브 저장소 다시 확인하기
+
++ 명령어를 입력하면 업로드한 깃허브의 저장소의 주소를 확인할 수 있음
++ 저장소 주소에 있는 깃허브 계정 이름과 깃허브 저장소 이름을 확인
++ 이 이름들이 깃허브에 배포한 영화 앱 주소에 사용될 것임
+
+```
+> git remote -v
+```
+<br>
+
+### 06. 영화 앱 깃허브에 배포하기
+
++ 터미널에서 명령어 입력하여 영화 앱 배포하기
+
+```
+> npm run deploy
+```
+<br>
+
+### 07. GitHub Pages에 접속하여 영화 앱 확인하기
+
++ URL에 **https:// [깃허브 계정].github.io/ [저장소 이름]** 을 입력
++ 깃허브에 배포한 영화 앱을 확인<br><br>
+
+## CDN 이란?
+
++ 특정 헤더를 통해서 브라우저에게 원 출처에서 실행되고 있는<br>
+웹 애플리케이션이 다른 출처에 원하는 리소스에 접근할 수 있는 권한이<br>
+있는지 없는지를 알려주는 매커니즘<br><br>
+
+```
+<script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+
+<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+```
+<br><br>
+
+## 새 폴더 생성
+
+<br>
+
+> 폴더명 : react_201740126
+
+<br>
+
+### 1. 기본 컴포넌트 실습 (index.html)
+<br>
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script crossorigin src=""></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+        class HelloMessage extends React.Component {
+            render() {
+                return (
+                <div>
+                Hello {this.props.name}
+                </div>
+                );
+            }
+        }
+    
+        ReactDOM.render(  //html body 태그 안의 id가 hello-example 인 태그를 가리킴 => Taylor란 값을 넣는다
+        <HelloMessage name="Taylor" />,
+         document.getElementById('hello-example')
+        );
+        </script>
+    </head>
+    <body>
+    <div id="hello-example"></div>    
+    </body>
+    
+</html>
+```
+<br>
+
+### 2. timer 컴포넌트 실습 (timer.html)
+<br>
+
+```html
+.
+.
+.
+
+<script type="text/babel">
+class Timer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { seconds: 0 };
+  }
+
+  tick() {
+    this.setState(state => ({
+      seconds: state.seconds + 1
+    }));
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.tick(), 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  render() {
+    return (
+      <div>
+        Seconds: {this.state.seconds}
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <Timer />,
+  document.getElementById('timer-example')
+);
+    </script>
+</head>
+<body>
+<div id="timer-example"></div>    
+</body>
+</html>
+```
+<br><br>
 
 # [ 11월 03일 ]
 
