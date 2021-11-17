@@ -20,10 +20,7 @@
 + homepage 키와 키값을 browserslist키 아래에 추가하기
 + 깃허브 계정과 저장소 이름에 주의하여 입력
 
-```jsx
-.
-.
-.
+```json
 
 "browserslist": {
     "production": [
@@ -36,9 +33,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },          // 쉼표 꼭 넣기!
+  },
   "homepage":"https://Owen1414.github.io/movie_app_2021"
-  // 계정 이름, 저장소 이름 확인!
 
 }
 ```
@@ -46,21 +42,15 @@
 
 + package.json 파일을 열어 **scripts 키캆**으로 명령어를 추가
 
-```jsx
-.
-.
-.
+```json
 
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",   // 쉼표 꼭 넣기!
-    "predeploy": "npm run build",     // 삽입
-    "deploy":"gh-pages -d build"      // 삽입
+    "build": "react-scripts build",
+    "predeploy": "npm run build", 
+    "deploy":"gh-pages -d build"
   },
 
-.
-.
-.
 ```
 <br>
 
