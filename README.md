@@ -1,5 +1,270 @@
-# 유지웅    201740126
+# 201740126 유지웅 - 웹콘텐츠 프로그래밍
+
+<br><br>
+
+# [ 11월 17일 ]
+
+## < 3번째 예제 - Todo List >
+
+- **TodoApp**과 **TodoList** 두개의 컴포넌트로 구성
+
+- handleChange는 모든 키보드 입력마다 React의 state를 갱신해서 보여줌<br>
+✔ element에서 확인
+
+- 시간순으로 보면 다음과 같이 동작<br>
+✔ 유저 입력 -> handleChange -> React의 state 갱신 -> form element가 React state를 참조
+
+- 유저 입력을 강제로 대문자로 변경할 경우에도 사용
+
+> handleChange(event) {<br>
+this.setState({value: event.target.value.toUpperCase( )})<br>
+}
+
+- handleSubmit은 버튼이 클릭될 때 발생하는 event를 처리
+
+- render( )메소드 에서 초기 렌더링을 실행함
+
+- onChange를 통해 input에 입력되는 값으로 state 상태 변경을 준비함
+
+- 입력된 값은 state의 "text: '' "에 임시로 저장됨
+
+- lavel의 htmlFor은 input과의 연결을 위한 id값<br>
+✔ className처럼 html과 구분하기 위해 JSX에서 사용하는 키워드
+
+- 버튼을 클릭하면 버튼의 숫자를 증가시킴
+
+- 리스트는 배열로 저장되기 때문에 item.length를 통해 list의 수를 확인함
+
+- input area에 이벤트가 발생하면 handleChange(e)가 동작하여 State의 text값을 변경
+
+- “Add #x”버튼을 클릭하면 리스트의 item.length에 1을 더해서 버튼에 출력
+
+- 크롬 DevTool을 열어 실시간으로 state가 변화하는 것을 확인
+
+- 이제 handleSubmit 메소드에 대해 살펴보기<br>
+제일 중요한 것은 **preventDefault 메소드를 사용하는 이유**
 <br>
+
+### - handleSubmit(e)에서 e.preventDefault() 메소드를 사용하는 이유?
+
+브라우저에서 양식을 제출할 때는 기본적으로 브라우저의 새로 고침이 발생하는데,<br>
+React나 SPA(single page application)의 경우 필요 없는 동작임으로 이를 방지하기 위해 사용
+
+- stae.text의 길이가 0이면 아무 것도 반환하지 않음
+ 
+- 0이 아니면 newItem에 입력 받은 text와 현재 시간을 저장
+ 
+- 이렇게 저장된 newItem을 state의 item배열에 저장하고, text를 비움
+<br>
+
+### - TodoList Component
+
+1. TodoList class를 생성
+
+2. ul 안에 추가된 task를 li로 출력
+
+3. 앞서 저장한 id값은 key props로 사용
+
+4. 마지막으로 ReactDOM으로 랜더링만 하면 끝
+<br>
+
+```jsx
+class TodoApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { items: [], text: '' };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  render() {
+    return (
+      <div>
+        <h3>TODO</h3>
+        <TodoList items={this.state.items} />
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="new-todo">
+            What needs to be done?
+          </label>
+          <input
+            id="new-todo"
+            onChange={this.handleChange}
+            value={this.state.text}
+          />
+          <button>
+            Add #{this.state.items.length + 1}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  handleChange(e) {
+    this.setState({ text: e.target.value });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.state.text.length === 0) {
+      return;
+    }
+    const newItem = {
+      text: this.state.text,
+      id: Date.now()
+    };
+    this.setState(state => ({
+      items: state.items.concat(newItem),
+      text: ''
+    }));
+  }
+}
+
+class TodoList extends React.Component {
+  render() {
+    return (
+      <ul>
+        {this.props.items.map(item => (
+          <li key={item.id}>{item.text}</li>
+        ))}
+      </ul>
+    );
+  }
+}
+
+ReactDOM.render(
+  <TodoApp />,
+  document.getElementById('todos-example')
+);
+```
+<br>
+
+### - 혹시 key props의 역할이 기억나지 않는다면...
+
+- key는 props의 안정적으로 사용할 수 있도록 고유성을 부여하기 위해 필요
+
+- React가 어떤 props를 변경, 추가 또는 삭제할지 식별하는 것을 도와줌
+
+- 반드시 date를 사용하지 않아도 되고 배열의 index값을 사용해도 됨
+
+- 유일한 값이라면 그 값이 무엇이든 상관없음
+
+<br><br>
+
+## < 4번째 예제 - 외부 플러그인을 사용하는 컴포넌트 >
+
+<br>
+
+> **Remarkable 오픈 소스 사이트** <br><br>
+https://github.com/jonschlinkert/remarkable
+
+<br>
+
+- 외부컴포넌트를 사용한 **markdown 에디터**
+
+- CDN 방법으로 진행했음으로 동일하게 진행
+
+- 다만 외부 플러그인은 Remarkable을 사용함으로 **CDN으로 링크를 추가**
+
+- remarkable.js로 검색<br>
+✔ https://github.com/jonschlinkert/remarkable
+
+- 사이트에서 제공하는 CDN사이트 2곳 중 한 곳에서 링크를 복사해 추가하기
+
+- 공식사이트의 소스코드를 복사해 넣기
+
+- 테스트 하기
+
+<br>
+
+### - creat-react-app으로 Remarkable 사용하기
+<br>
+
+1. creat-react-app으로 markdown-editor 프로젝트를 생성
+
+2. 정상 동작을 확인
+
+3. App.js에 있는 필요없는 코드를 삭제
+
+4. App.js에 문서의 코드를 복사해 넣기
+
+5. component의 이름을 App으로 수정
+
+6. rendering은 index.js에 위임
+
+7. Remarkable을 설치
+> npm install remarkable
+
+8. React와 Remarkable을 import
+
+```jsx
+import { Remarkable } from 'remarkable'
+```
+
+9. 동작이 되는지 확인
+
+<br><br><br>
+
+
+
+### - **APP.js 완성 소스**
+
+<br>
+
+```jsx
+import React from 'react';
+import { Remarkable } from 'remarkable';
+
+class MarkdownEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.md = new Remarkable();
+    this.handleChange = this.handleChange.bind(this);
+    this.state = { value: 'Hello, **world**!' };
+  }
+
+  handleChange(e) {
+    this.setState({ value: e.target.value });
+  }
+
+  getRawMarkup() {
+    return { __html: this.md.render(this.state.value) };
+  }
+
+  render() {
+    return (
+      <div className="MarkdownEditor">
+        <h3>Input</h3>
+        <label htmlFor="markdown-content">
+          Enter some markdown
+        </label>
+        <textarea
+          id="markdown-content"
+          onChange={this.handleChange}
+          defaultValue={this.state.value}
+        />
+        <h3>Output</h3>
+        <div
+          className="content"
+          dangerouslySetInnerHTML={this.getRawMarkup()}
+        />
+      </div>
+    );
+  }
+}
+
+export default MarkdownEditor;
+```
+<br>
+
+- 외부 컴포넌트를 사용하기 위해 생성자 내에 객체를 생성
+
+- state를 이용하여 Remarkable에 변환할 마크다운 문장을 제출
+
+- 글이 입력되면 handleChange 이벤트를 사용하여 state의 value를 갱신
+
+- getRawMarkup() 메소드를 통해 html을 반환 받음
+
+<br><br><br>
 
 # [ 11월 10일 ]
 
@@ -210,7 +475,8 @@ ReactDOM.render(
 </body>
 </html>
 ```
-<br><br>
+
+<br><br><br>
 
 # [ 11월 03일 ]
 
