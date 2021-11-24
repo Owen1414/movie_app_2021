@@ -68,7 +68,7 @@ React나 SPA(single page application)의 경우 필요 없는 동작임으로 �
 4. 마지막으로 ReactDOM으로 랜더링만 하면 끝
 <br>
 
-```jsx
+```html
 class TodoApp extends React.Component {
   constructor(props) {
     super(props);
