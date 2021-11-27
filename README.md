@@ -2,6 +2,447 @@
 
 <br><br>
 
+# [ 11월 24일 ]
+
+
+## JSX 소개
+
+- JavaScript를 확장한 문법
+
+```jsx
+const element = <h1>Hello, world!</h1>;
+```
+<br>
+
+
+### - JSX에 표현식 포함하기
+<br>
+
+- 아래 예시에서는 name이라는 변수를 선언한 후 중괄호로 감싸 JSX 안에 사용함
+
+```jsx
+const name = 'Josh Perez';
+const element = <h1>Hello, {name}</h1>;
+
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+```
+
+- JSX의 중괄호 안에는 유효한 모든 JavaScript 표현식을 넣을 수 있음
+
+- 아래 예시에서는 JavaScript 함수 호출의 결과인 formatName(user)을<br>
+h1(태그) 엘리먼트에 포함했음
+
+```jsx
+function formatName(user) {
+  return user.firstName + ' ' + user.lastName;
+}
+
+const user = {
+  firstName: 'Harper',
+  lastName: 'Perez'
+};
+
+const element = (
+  <h1>
+    Hello, {formatName(user)}!
+  </h1>
+);
+
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+```
+<br>
+
+### - JSX도 표현식
+<br>
+
+- 컴파일이 끝나면, JSX 표현식이 정규 JavaScript 함수 호출이 되고<br>
+JavaScript 객체로 인식됨
+
+- 즉, JSX를 if 구문 및 for loop 안에 사용하고, 변수에 할당하고,<br>
+인자로서 받아들이고, 함수로부터 반환할 수 있음
+
+```jsx
+function getGreeting(user) {
+  if (user) {
+    return <h1>Hello, {formatName(user)}!</h1>;
+  }
+  return <h1>Hello, Stranger.</h1>;
+}
+```
+<br>
+
+### - JSX 속성 정의
+<br>
+
+- 어트리뷰트에 따옴표를 이용해 문자열 리터럴을 정의할 수 있음
+
+```jsx
+const element = <div tabIndex="0"></div>;
+```
+<br>
+
+- 중괄호를 사용하여 어트리뷰트에 JavaScript 표현식을 삽입할 수도 있음
+
+```jsx
+const element = <img src={user.avatarUrl}></img>;
+```
+<br>
+
+- 어트리뷰트에 JavaScript 표현식을 삽입할 때 중괄호 주변에 따옴표를 입력하지 말기!<br>
+따옴표(문자열 값에 사용) 또는 중괄호(표현식에 사용) 중 하나만 사용하고,<br>
+동일한 어트리뷰트에 두 가지를 동시에 사용하면 안 됨
+
+<br>
+
+>**< 경 고 >**<br><br>
+JSX는 HTML보다는 JavaScript에 가깝기 때문에,<br>
+React DOM은 HTML 어트리뷰트 이름 대신 **CamelCase** 프로퍼티 명명 규칙을 사용함
+
+<br>
+
+### - JSX로 자식 정의
+<br>
+
+- 태그가 비어있다면 XML처럼 /> 를 이용해 바로 닫아주어야 함
+
+```jsx
+const element = <img src={user.avatarUrl} />;
+```
+<br>
+
+- JSX 태그는 자식을 포함할 수 있음
+
+```jsx
+const element = (
+  <div>
+    <h1>Hello!</h1>
+    <h2>Good to see you here.</h2>
+  </div>
+);
+```
+<br>
+
+### - JSX는 주입 공격을 방지
+<br>
+
+- JSX에 사용자 입력을 삽입하는 것은 안전
+
+```jsx
+const title = response.potentiallyMaliciousInput;
+// 이것은 안전합니다.
+const element = <h1>{title}</h1>;
+```
+<br>
+
+- 기본적으로 React DOM은 JSX에 삽입된 모든 값을 렌더링하기 전에 이스케이프 하므로,<br>
+애플리케이션에서 명시적으로 작성되지 않은 내용은 주입되지 않음<br>
+모든 항목은 렌더링 되기 전에 문자열로 변환됨<br>
+이런 특성으로 인해 XSS (cross-site-scripting) 공격을 방지할 수 있음
+
+<br>
+
+### - JSX는 객체를 표현
+<br>
+
+- Babel은 JSX를 React.createElement() 호출로 컴파일함
+
+- 다음 두 예시는 동일함
+
+```jsx
+const element = (
+  <h1 className="greeting">
+    Hello, world!
+  </h1>
+);
+```
+<br>
+
+```jsx
+const element = React.createElement(
+  'h1',
+  {className: 'greeting'},
+  'Hello, world!'
+);
+```
+<br>
+
+- React.createElement()는 버그가 없는 코드를 작성하는 데 도움이 되도록<br>
+몇 가지 검사를 수행하며, 기본적으로 다음과 같은 객체를 생성함
+
+```jsx
+// 주의: 다음 구조는 단순화되었습니다
+const element = {
+  type: 'h1',
+  props: {
+    className: 'greeting',
+    children: 'Hello, world!'
+  }
+};
+```
+<br>
+
+- 이러한 객체를 **React 엘리먼트**라고 하며,<br> 화면에서 보고 싶은 것을 나타내는 표현이라 생각하면 됨<br>
+React는 이 객체를 읽어서, DOM을 구성하고 최신 상태로 유지하는 데 사용함
+
+<br>
+
+>**< 팁 >**<br><br>
+ES6 및 JSX 코드가 올바르게 표시되도록 편집기에<br>
+**Babel** 언어 설정을 사용하는 것을 권장
+
+<br><br>
+
+## 엘리먼트 렌더링
+
+- 엘리먼트는 React 앱의 가장 작은 단위
+
+- 엘리먼트는 화면에 표시할 내용을 기술함
+
+```jsx
+const element = <h1>Hello, world</h1>;
+```
+
+
+- 브라우저 DOM 엘리먼트와 달리 React 엘리먼트는 일반 객체이며(plain object)<br>
+쉽게 생성할 수 있음<br>
+React DOM은 React 엘리먼트와 일치하도록 DOM을 업데이트함
+
+<br>
+
+### - DOM에 엘리먼트 렌더링하기
+<br>
+
+- HTML 파일 어딘가에 div 태그가 있다고 가정
+
+```html
+<div id="root"></div>
+```
+
+
+- 이 안에 들어가는 모든 엘리먼트를 React DOM에서 관리하기 때문에<br>
+이것을 **“루트(root)” DOM 노드**라고 부름
+
+- React로 구현된 애플리케이션은 일반적으로 하나의 루트 DOM 노드가 있음<br>
+React를 기존 앱에 통합하려는 경우 원하는 만큼 많은 수의<br>
+독립된 루트 DOM 노드가 있을 수 있음
+
+- React 엘리먼트를 루트 DOM 노드에 렌더링하려면<br>
+둘 다 ReactDOM.render()로 전달하면 됨
+
+```jsx
+const element = <h1>Hello, world</h1>;
+ReactDOM.render(element, document.getElementById('root'));
+```
+
+<br><br>
+
+## Components와 Props
+
+- 개념적으로 컴포넌트는 JavaScript 함수와 유사함<br>
+“props”라고 하는 임의의 입력을 받은 후,<br>
+화면에 어떻게 표시되는지를 기술하는 React 엘리먼트를 반환함
+
+<br>
+
+### - 함수 컴포넌트와 클래스 컴포넌트
+<br>
+
+- 컴포넌트를 정의하는 가장 간단한 방법은<br>
+**JavaScript 함수**를 작성하는 것
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+```
+
+- 이 함수는 데이터를 가진 하나의 “props” (props는 속성을 나타내는 데이터) 객체 인자를 받은 후<br>
+React 엘리먼트를 반환하므로 유효한 React 컴포넌트<br>
+이러한 컴포넌트는 JavaScript 함수이기 때문에 말 그대로 “함수 컴포넌트”라고 호칭함
+
+- 또한 ES6 class를 사용하여 컴포넌트를 정의할 수 있음
+
+```jsx
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+```
+
+- React의 관점에서 볼 때 위 두 가지 유형의 컴포넌트는 동일함
+
+<br>
+
+### - 컴포넌트 렌더링
+<br>
+
+- 이전까지는 DOM 태그만을 사용해 React 엘리먼트를 나타냈음
+
+```jsx
+const element = <div />;
+```
+
+- React 엘리먼트는 사용자 정의 컴포넌트로도 나타낼 수 있음
+
+```jsx
+const element = <Welcome name="Sara" />;
+```
+
+- React가 사용자 정의 컴포넌트로 작성한 엘리먼트를 발견하면<br>
+JSX 어트리뷰트와 자식을 해당 컴포넌트에 단일 객체로 전달함<br>
+이 객체를 “props”라고 함
+
+
+- 다음은 페이지에 “Hello, Sara”를 렌더링하는 예시
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+const element = <Welcome name="Sara" />;
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+```
+
+- 이 예시에서는 다음과 같은 일들이 일어납니다.
+
+```
+1. <Welcome name="Sara" /> 엘리먼트로 ReactDOM.render()를 호출함
+2. React는 {name: 'Sara'}를 props로 하여 Welcome 컴포넌트를 호출함
+3. Welcome 컴포넌트는 결과적으로 <h1>Hello, Sara</h1> 엘리먼트를 반환함
+4. React DOM은 <h1>Hello, Sara</h1> 엘리먼트와 일치하도록 DOM을 효율적으로 업데이트함
+```
+<br>
+
+> 주의 : 컴포넌트의 이름은 항상 대문자로 시작함<br><br>
+React는 소문자로 시작하는 컴포넌트를 DOM 태그로 처리함<br>
+예를 들어 < div />는 HTML div 태그를 나타내지만,<br>
+< Welcome />은 컴포넌트를 나타내며 범위 안에 Welcome이 있어야 함
+
+<br>
+
+### - 컴포넌트 합성
+<br>
+
+- 컴포넌트는 자신의 출력에 다른 컴포넌트를 참조할 수 있음<br>
+이는 모든 세부 단계에서 동일한 추상 컴포넌트를 사용할 수 있음을 의미함<br>
+React 앱에서는 버튼, 폼, 다이얼로그, 화면 등의 모든 것들이<br>
+흔히 컴포넌트로 표현됨
+
+- 예를 들어 Welcome을 여러 번 렌더링하는 App 컴포넌트를 만들 수 있음
+
+```jsx
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+
+function App() {
+  return (
+    <div>
+      <Welcome name="Sara" />
+      <Welcome name="Cahal" />
+      <Welcome name="Edite" />
+    </div>
+  );
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
+```
+<br>
+
+### - 함수에서 클래스로 변환하기
+<br>
+
+- React.Component를 확장하는 동일한 이름의 ES6 class를 생성
+
+- render()라고 불리는 빈 메서드를 추가
+
+- 함수의 내용을 render() 메서드 안으로 옮기기
+
+- render() 내용 안에 있는 props를 this.props로 변경
+
+- 남아있는 빈 함수 선언을 삭제
+
+```jsx
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.props.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+```
+<br>
+
+### - 클래스에 로컬 State 추가하기
+<br>
+
+- render() 메서드 안에 있는 this.props.date를 this.state.date로 변경
+
+```jsx
+class Clock extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+```
+
+- 초기 this.state를 지정하는 class constructor를 추가
+
+```jsx
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello, world!</h1>
+        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+```
+
+- date prop을 삭제
+
+```jsx
+ReactDOM.render(
+  <Clock />,
+  document.getElementById('root')
+);
+```
+
+
+
+
+
+<br><br><br>
+
 # [ 11월 17일 ]
 
 ## < 3번째 예제 - Todo List >
