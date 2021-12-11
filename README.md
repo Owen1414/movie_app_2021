@@ -2,6 +2,514 @@
 
 <br><br>
 
+# [ 12월 08일 ]
+
+## 8. 리스트와 Key
+
+- 배열의 값을 반환할 때는 map()함수를 사용<br>
+변환하여 반환하는 것도 가능!
+
+```jsx
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map((number) => number * 2);
+console.log(doubled);
+// [2, 4, 6, 8, 10]을 출력
+```
+
+✔ console에서 확인해보기
+
+✔ react에서 배열을 리스트로 만드는 방식도 이와 유사함
+<br><br>
+
+### 8-1. 여러개의 엘리먼트 렌더링 하기
+
+- 엘리먼트 모음을 만들고 중괄호 {}를 이용하여 JSX에 포함 시킬 수 있음
+
+- 아래의 JavaScript map() 함수를 사용하여 numbers 배열을 반복 실행함<br>
+각 항목에 대해 < li > 엘리먼트를 반환하고 엘리먼트 배열의 결과를 listItems에 저장함
+
+```jsx
+const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  <li>{number}</li>
+);
+```
+
+- listItems 배열을 < ul >엘리먼트 안에 포함하고 DOM에 렌더링함
+  
+```jsx
+ReactDOM.render(
+  <ul>{listItems}</ul>,
+  document.getElementById('root')
+);
+```
+<br>
+
+✔ 이 코드는 1부터 5까지의 숫자로 이루어진 리스트를 보여줌
+<br><br>
+
+
+### 8-2. 기본 리스트 컴포넌트
+
+- 일반적으로 컴포넌트 안에서 리스트를 렌더링함
+
+- 이전 예시를 numbers 배열을 받아서 순서 없는 엘리먼트 리스트를 출력하는 컴포넌트로 리팩토링할 수 있음
+ 
+```jsx
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li>{number}</li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+```
+
+- 이 코드를 실행하면 리스트의 각 항목에 key를 넣어야 한다는 경고가 표시!
+
+- “key”는 엘리먼트 리스트를 만들 때 포함해야 하는 특수한 문자열 어트리뷰트
+ 
+- 이제 numbers.map() 안에서 리스트의 각 항목에 key를 할당하여 키 누락 문제를 해결하겠음
+
+```jsx
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li key={number.toString()}>
+      {number}
+    </li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+```
+<br><br>
+
+### 8-3. Key
+
+- Key는 React가 어떤 항목을 변경, 추가 또는 삭제할지 식별하는 것을 도움<br>
+key는 엘리먼트에 안정적인 고유성을 부여하기 위해 배열 내부의 엘리먼트에 지정해야 함
+
+```jsx
+const numbers = [1, 2, 3, 4, 5];
+const listItems = numbers.map((number) =>
+  <li key={number.toString()}>
+    {number}
+  </li>
+);
+```
+
+✔ Key를 선택하는 가장 좋은 방법은 리스트의 다른 항목들 사이에서 해당 항목을 고유하게 식별할 수 있는 문자열을 사용하는 것<br>
+대부분의 경우 데이터의 ID를 key로 사용
+ 
+```jsx
+const todoItems = todos.map((todo) =>
+  <li key={todo.id}>
+    {todo.text}
+  </li>
+);
+```
+
+- 렌더링한 항목에 대한 안정적인 ID가 없다면 최후의 수단으로 항목의 인덱스를 key로 사용할 수 있음
+
+```jsx
+const todoItems = todos.map((todo, index) =>
+  // Only do this if items have no stable IDs
+  <li key={index}>
+    {todo.text}
+  </li>
+);
+```
+
+- 항목의 순서가 바뀔 수 있는 경우 key에 인덱스를 사용하는 것은 권장하지 않음
+
+-  인해 성능이 저하되거나 컴포넌트의 state와 관련된 문제가 발생할 수 있음
+ 
+- bin Pokorny’s가 작성한 글인 인덱스를 key로 사용할 경우 부정적인 영향에 대한 상세 설명을 참고하기
+
+- 리스트 항목에 명시적으로 key를 지정하지 않으면 React는 기본적으로 인덱스를 key로 사용
+<br><br>
+
+### 8-4. Key로 컴포넌트 추출하기
+
+- 키는 주변 배열의 **context**에서만 의미가 있음
+
+- 예를 들어 ListItem 컴포넌트를 추출 한 경우 ListItem 안에 있는 < li > 엘리먼트가 아니라<br>
+**배열의 < ListItem /> 엘리먼트**가 key를 가져야 함
+
+✔ 예시: 잘못된 Key 사용법
+
+```jsx
+function ListItem(props) {
+  const value = props.value;
+  return (
+    // 틀렸습니다! 여기에는 key를 지정할 필요가 X
+    <li key={value.toString()}>
+      {value}
+    </li>
+  );
+}
+
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    // 틀렸습니다! 여기에 key를 지정해야 함
+    <ListItem value={number} />
+  );
+  return (
+    <ul>
+      {listItems}
+    </ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+```
+
+✔ 예시: 올바른 Key 사용법
+
+```jsx
+function ListItem(props) {
+  // 맞습니다! 여기에는 key를 지정할 필요가 없음
+  return <li>{props.value}</li>;
+}
+
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    // 맞습니다! 배열 안에 key를 지정해야 함
+    <ListItem key={number.toString()} value={number} />
+  );
+  return (
+    <ul>
+      {listItems}
+    </ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+```
+
+✔ map() 함수 내부에 있는 엘리먼트에 key를 넣어 주는 게 좋음
+<br><br>
+
+### 8-5. Key는 배열내 요소 사이에서만 고유한 값이면 된다.
+
+- Key는 형제 사이에서만 고유한 값이어야 함
+ 
+- Key는 배열 안에서 형제 사이에서 고유해야 하고 전체 범위에서 고유할 필요는 없음<br>
+두 개의 다른 배열을 만들 때 동일한 key를 사용할 수 있음
+
+```jsx
+function Blog(props) {
+  const sidebar = (
+    <ul>
+      {props.posts.map((post) =>
+        <li key={post.id}>
+          {post.title}
+        </li>
+      )}
+    </ul>
+  );
+  const content = props.posts.map((post) =>
+    <div key={post.id}>
+      <h3>{post.title}</h3>
+      <p>{post.content}</p>
+    </div>
+  );
+  return (
+    <div>
+      {sidebar}
+      <hr />
+      {content}
+    </div>
+  );
+}
+
+const posts = [
+  {id: 1, title: 'Hello World', content: 'Welcome to learning React!'},
+  {id: 2, title: 'Installation', content: 'You can install React from npm.'}
+];
+ReactDOM.render(
+  <Blog posts={posts} />,
+  document.getElementById('root')
+);
+```
+
+- React에서 key는 힌트를 제공하지만 컴포넌트로 전달하지는 않음<br>
+컴포넌트에서 key와 동일한 값이 필요하면 다른 이름의 prop으로 명시적으로 전달함
+
+```jsx
+const content = posts.map((post) =>
+  <Post
+    key={post.id}
+    id={post.id}
+    title={post.title} />
+);
+```
+
+✔ 위 예시에서 Post 컴포넌트는 **props.id**를 읽을 수 있지만 **props.key**는 읽을 수 없음
+<br><br>
+
+### 8-6. JSX에 map() 포함시키기
+
+- 위 예시에서 별도의 listItems 변수를 선언하고 이를 JSX에 포함했음
+
+```jsx
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <ListItem key={number.toString()}
+              value={number} />
+  );
+  return (
+    <ul>
+      {listItems}
+    </ul>
+  );
+}
+```
+
+- JSX를 사용하면 중괄호 안에 모든 표현식을 포함 시킬 수 있으므로 map() 함수의 결과를 인라인으로 처리할 수 있음
+
+```jsx
+function NumberList(props) {
+  const numbers = props.numbers;
+  return (
+    <ul>
+      {numbers.map((number) =>
+        <ListItem key={number.toString()}
+                  value={number} />
+      )}
+    </ul>
+  );
+}
+```
+
+- 이 방식을 사용하면 코드가 깔끔해 지지만 사용에 주의해야 함
+
+✔ map() 함수가 너무 중첩된다면 컴포넌트로 추출하는 것이 좋음
+<br><br>
+
+## 9. Form
+
+- HTML의 form 엘리먼트는 내부 state를 갖기 때문에 React의 다른 DOM 엘리먼트와는 다르게 동작함
+
+```html
+<form>
+  <label>
+    Name:
+    <input type="text" name="name" />
+  </label>
+  <input type="submit" value="Submit" />
+</form>
+```
+
+- 만일 제시한 예가 순수한 HTML이라면 이 폼은 name을 입력 받고, 폼을 제출하면 새로운 페이지로 이동함
+
+- React에서도 동일한 동작을 원한다면 그대로 사용하면 됨
+
+- 그러나 일반적인 경우라면 JS함수로 폼의 제출을 처리하고, 사용자가 폼에 입력한 데이터에 접근하도록 하는 것이 편리함
+
+- 이를 위한 표준 방식은 **제어 컴포넌트 (controlled components)** 라고 불리는 기술을 이용하는 것임
+<br><br>
+
+### 9-1. 제어 컴포넌트 (Controlled Component)
+
+- HTML에서 < input >, < textarea >, < select >와 같은 폼 엘리먼트는 일반적으로 사용자의 입력을 기반으로 자신의 state를 관리하고 업데이트함
+
+- React에서는 변경할 수 있는 state가 일반적으로 컴포넌트의 state 속성에 유지되며 setState()에 의해 업데이트됨
+
+- 우리는 React state를 “신뢰 가능한 단일 출처 (single source of truth)“로 만들어 두 요소를 결합할 수 있음
+
+- 그러면 폼을 렌더링하는 React 컴포넌트는 폼에 발생하는 사용자 입력값을 제어함<br>
+이러한 방식으로 React에 의해 값이 제어되는 입력 폼 엘리먼트를 **제어 컴포넌트 (controlled component**라고 함
+
+- 예를 들어, 이전 예시가 전송될 때 이름을 기록하길 원한다면 폼을 제어 컴포넌트 (controlled component)로 작성할 수 있음
+
+```jsx
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+```
+
+- value 어트리뷰트는 폼 엘리먼트에 설정되므로 표시되는 값은 항상 this.state.value가 되고 React state는 신뢰 가능한 단일 출처 (single source of truth)가 됨
+ 
+- React state를 업데이트하기 위해 모든 키 입력에서 handleChange가 동작하기 때문에 사용자가 입력할 때 보여지는 값이 업데이트됨
+
+- 제어 컴포넌트로 사용하면, input의 값은 항상 React state에 의해 결정됨<br>
+코드를 조금 더 작성해야 한다는 의미이지만, 다른 UI 엘리먼트에 input의 값을 전달하거나 다른 이벤트 핸들러에서 값을 재설정할 수 있음
+<br><br>
+
+### 9-2. textarea 태그
+
+- HTML에서 < textarea > 엘리먼트는 텍스트를 자식으로 정의함
+  
+```html
+<textarea>
+  Hello there, this is some text in a text area
+</textarea>
+```
+
+- React에서 <textarea>는 value 어트리뷰트를 대신 사용함
+  
+- 이렇게하면 <textarea>를 사용하는 폼은 한 줄 입력을 사용하는 폼과 비슷하게 작성할 수 있음
+
+```jsx
+class EssayForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 'Please write an essay about your favorite DOM element.'
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('An essay was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Essay:
+          <textarea value={this.state.value} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+```
+
+✔ this.state.value를 생성자에서 초기화하므로 textarea는 일부 텍스트를 가진채 시작되는 점을 주의
+<br><br>
+
+### 9-3. select 태그
+
+- HTML에서 < select >는 드롭 다운 목록을 만듬
+  
+- 예를 들어, 이 HTML은 과일 드롭 다운 목록을 만듬
+  
+```html
+<select>
+  <option value="grapefruit">Grapefruit</option>
+  <option value="lime">Lime</option>
+  <option selected value="coconut">Coconut</option>
+  <option value="mango">Mango</option>
+</select>
+```
+
+✔ selected 옵션이 있으므로 Coconut 옵션이 초기값이 되는 점을 주의
+
+- React에서는 selected 어트리뷰트를 사용하는 대신 최상단 select태그에 value 어트리뷰트를 사용합니다. 한 곳에서 업데이트만 하면되기 때문에 제어 컴포넌트에서 사용하기 더 편합니다. 아래는 예시입니다.
+
+class FlavorForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: 'coconut'};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('Your favorite flavor is: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Pick your favorite flavor:
+          <select value={this.state.value} onChange={this.handleChange}>
+            <option value="grapefruit">Grapefruit</option>
+            <option value="lime">Lime</option>
+            <option value="coconut">Coconut</option>
+            <option value="mango">Mango</option>
+          </select>
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+CodePen에서 실행하기
+
+전반적으로 <input type="text">, <textarea> 및 <select> 모두 매우 비슷하게 동작합니다. 모두 제어 컴포넌트를 구현하는데 value 어트리뷰트를 허용합니다.
+
+주의
+
+select 태그에 multiple 옵션을 허용한다면 value 어트리뷰트에 배열을 전달할 수 있습니다.
+
+<select multiple={true} value={['B', 'C']}>
+
+
+
+
 # [ 12월 01일 ]
 
 ## 5. State와 생명주기
